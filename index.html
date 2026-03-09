@@ -530,13 +530,14 @@
       <form id="ticketForm" onsubmit="submitTicket(event)">
       <div class="fg"><label>Seu nome</label><input type="text" id="nome" placeholder="Ex: Mateus Cortez" required></div>
       <div class="fg"><label>E-mail</label><input type="email" id="email" placeholder="seu@email.com" required></div>
+      <div class="fg"><label>WhatsApp</label><input type="tel" id="telefone" placeholder="(19) 99999-9999" required></div>
       <div class="fg"><label>Categoria</label><select id="categoria" required><option value="">Selecione...</option><option>Bug</option><option>Duvida</option><option>Ajuste</option><option>Sugestao</option></select></div>
       <div class="fg"><label>Area do CRM</label><select id="area" required><option value="">Selecione...</option><option>Pipelines</option><option>Workflows</option><option>Campos / Tags</option><option>Lead Score</option><option>Usuarios</option><option>Outro</option></select></div>
       <div class="fg"><label>Assunto</label><input type="text" id="assunto" placeholder="Resumo do chamado" required></div>
       <div class="fg"><label>Descricao</label><textarea id="descricao" placeholder="Descreva com detalhes..." required></textarea></div>
       <button type="submit" class="form-btn" id="submitBtn">Enviar Chamado</button>
       </form>
-      <div id="form-success" style="display:none;text-align:center;padding:24px 0;"><div style="font-size:15px;font-weight:800;color:var(--done);margin-bottom:6px;">Chamado enviado com sucesso</div><div style="font-size:12px;color:var(--text-dim);font-weight:500;">Nosso time foi notificado e uma tarefa foi criada. Retorno em ate 24h.</div><button onclick="resetForm()" style="margin-top:16px;padding:8px 20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:700;font-size:12px;cursor:pointer;">Enviar outro chamado</button></div>
+      <div id="form-success" style="display:none;text-align:center;padding:24px 0;"><div style="font-size:15px;font-weight:800;color:var(--done);margin-bottom:6px;">Chamado enviado com sucesso</div><div style="font-size:12px;color:var(--text-dim);font-weight:500;">Nosso time foi notificado, uma tarefa foi criada e voce recebera confirmacao no WhatsApp. Retorno em ate 24h.</div><button onclick="resetForm()" style="margin-top:16px;padding:8px 20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:700;font-size:12px;cursor:pointer;">Enviar outro chamado</button></div>
     </div>
   </div>
 </section>
@@ -605,6 +606,27 @@ document.querySelectorAll('.stat-n').forEach(function(el){
 var ASANA_PAT='2/1212830990272012/1213536213971288:f610b2ec8ddc2e4c9cfb3792637035be';
 var ASANA_PROJECT='1213599567189728';
 
+/* Z-API WhatsApp */
+var ZAPI_INSTANCE='3EE52809B2674111E65B0A9F1770609E';
+var ZAPI_TOKEN='0979A3F00E3994A164770964';
+var ZAPI_CLIENT_TOKEN='F5d48b16cc5d34a4c98f24560d7e8274bS';
+var TRIADEFLOW_PHONE='5519983805908';
+
+function cleanPhone(phone){
+  var digits=phone.replace(/\D/g,'');
+  if(digits.length===11)digits='55'+digits;
+  if(digits.length===10)digits='55'+digits;
+  return digits;
+}
+
+function sendWhatsApp(phone,message){
+  return fetch('https://api.z-api.io/instances/'+ZAPI_INSTANCE+'/token/'+ZAPI_TOKEN+'/send-text',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Client-Token':ZAPI_CLIENT_TOKEN},
+    body:JSON.stringify({phone:phone,message:message})
+  }).then(function(r){return r.json();}).catch(function(err){console.warn('WhatsApp send error:',err);});
+}
+
 function submitTicket(e){
   e.preventDefault();
   var btn=document.getElementById('submitBtn');
@@ -612,15 +634,18 @@ function submitTicket(e){
 
   var nome=document.getElementById('nome').value;
   var email=document.getElementById('email').value;
+  var telefone=document.getElementById('telefone').value;
   var categoria=document.getElementById('categoria').value;
   var area=document.getElementById('area').value;
   var assunto=document.getElementById('assunto').value;
   var descricao=document.getElementById('descricao').value;
   var dataHora=new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
+  var clientPhone=cleanPhone(telefone);
 
   var taskName='['+categoria.toUpperCase()+'] '+assunto;
-  var taskNotes='Categoria: '+categoria+'\nArea: '+area+'\nSolicitante: '+nome+'\nEmail: '+email+'\n\nDescricao:\n'+descricao+'\n\nEnviado em: '+dataHora+'\nPortal: talentusdigital.triadeflow.ai';
+  var taskNotes='Categoria: '+categoria+'\nArea: '+area+'\nSolicitante: '+nome+'\nEmail: '+email+'\nWhatsApp: '+telefone+'\n\nDescricao:\n'+descricao+'\n\nEnviado em: '+dataHora+'\nPortal: talentusdigital.triadeflow.ai';
 
+  /* 1. Criar task no Asana */
   fetch('https://app.asana.com/api/1.0/tasks',{
     method:'POST',
     headers:{'Authorization':'Bearer '+ASANA_PAT,'Content-Type':'application/json'},
@@ -628,6 +653,27 @@ function submitTicket(e){
   }).then(function(r){
     if(!r.ok)throw new Error('Erro '+r.status);return r.json();
   }).then(function(){
+    /* 2. Notificar Triadeflow via WhatsApp */
+    var msgTeam='*Novo chamado no portal Talentus Digital*\n\n'
+      +'*Categoria:* '+categoria+'\n'
+      +'*Area:* '+area+'\n'
+      +'*Assunto:* '+assunto+'\n'
+      +'*Solicitante:* '+nome+'\n'
+      +'*WhatsApp:* '+telefone+'\n'
+      +'*Email:* '+email+'\n\n'
+      +'*Descricao:*\n'+descricao+'\n\n'
+      +'_Task criada no Asana automaticamente_';
+    sendWhatsApp(TRIADEFLOW_PHONE,msgTeam);
+
+    /* 3. Confirmar para o cliente via WhatsApp */
+    if(clientPhone.length>=12){
+      var msgClient='Oi '+nome.split(' ')[0]+', recebemos seu chamado no portal Talentus Digital.\n\n'
+        +'*Assunto:* '+assunto+'\n'
+        +'*Categoria:* '+categoria+'\n\n'
+        +'Nossa equipe foi notificada e voce recebera retorno em ate 24h. Obrigado!';
+      sendWhatsApp(clientPhone,msgClient);
+    }
+
     document.getElementById('ticketForm').style.display='none';
     document.getElementById('form-success').style.display='block';
     document.querySelector('.support-form h3').style.display='none';
