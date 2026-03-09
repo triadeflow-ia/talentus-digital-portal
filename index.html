@@ -239,13 +239,29 @@
     .cc-title{font-size:14px;font-weight:800;}
     .cc-sub{font-size:12px;color:var(--text-dim);font-weight:500;}
 
+    /* TOOLS SECTION (Miro + Notion) */
+    .tools-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:32px;}
+    .tool-card{background:var(--bg-card);border:2px solid var(--border);border-radius:14px;padding:28px;text-decoration:none;color:var(--text);transition:all 0.15s;display:flex;flex-direction:column;gap:12px;}
+    .tool-card:hover{border-color:var(--gold-accent);box-shadow:0 4px 16px rgba(0,0,0,0.06);transform:translateY(-2px);}
+    .tool-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;}
+    .tool-icon.miro{background:#ffe066;color:#050038;}
+    .tool-icon.notion{background:#1c1b18;color:#fff;}
+    .tool-name{font-size:16px;font-weight:800;color:var(--text);}
+    .tool-desc{font-size:13px;color:var(--text-dim);line-height:1.6;font-weight:500;}
+    .tool-link{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.5px;margin-top:auto;}
+    .tool-card:hover .tool-link{color:var(--gold-accent);}
+    .notion-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:16px;}
+    .notion-phase{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text-mid);font-size:12px;font-weight:600;transition:all 0.15s;}
+    .notion-phase:hover{border-color:var(--gold-accent);color:var(--text);background:var(--bg-card);}
+    .notion-phase .np-icon{font-size:14px;}
+
     footer{padding:28px 36px;text-align:center;border-top:2px solid var(--border);font-size:12px;color:var(--text-muted);font-weight:500;background:var(--bg-alt);}
     footer strong{color:var(--gold);font-weight:800;}
 
     @media(max-width:768px){
       .nav-links{display:none;}.hero{padding:88px 20px 56px;}.hero h1{font-size:30px;}
       .progress-hud{grid-template-columns:1fr;}.stats-row{flex-wrap:wrap;margin:−36px 16px 0;border-radius:12px;}
-      .del-grid{grid-template-columns:1fr;}.score-layout{grid-template-columns:1fr;}
+      .del-grid{grid-template-columns:1fr;}.tools-grid{grid-template-columns:1fr;}.score-layout{grid-template-columns:1fr;}
       .prod-grid{grid-template-columns:1fr 1fr;}.support-inner{grid-template-columns:1fr;}
       .team-grid{grid-template-columns:repeat(2,1fr);}
     }
@@ -256,7 +272,7 @@
 <nav>
   <div class="nav-left"><span class="brand">TRIADEFLOW</span><span class="sep">|</span><span class="client">TALENTUS DIGITAL</span></div>
   <div class="nav-links">
-    <a href="#progresso">Progresso</a><a href="#entrega">Entregas</a><a href="#pipelines">Pipelines</a><a href="#score">Lead Score</a><a href="#timeline">Timeline</a><a href="#suporte">Suporte</a>
+    <a href="#progresso">Progresso</a><a href="#entrega">Entregas</a><a href="#pipelines">Pipelines</a><a href="#ferramentas">Miro &amp; Notion</a><a href="#score">Lead Score</a><a href="#timeline">Timeline</a><a href="#suporte">Suporte</a>
   </div>
   <a href="#suporte" class="nav-cta">Abrir Chamado</a>
 </nav>
@@ -331,6 +347,40 @@
       <div class="funnel-card"><div class="funnel-header"><span class="funnel-name">Sucesso do Cliente</span><span class="funnel-tag">Retencao</span></div><div class="flow"><div class="flow-stage entry">Ativo</div><div class="flow-stage risk">Em Risco</div><div class="flow-stage special">Renovacao</div><div class="flow-stage special">Upsell</div><div class="flow-stage won">Expandido</div><div class="flow-stage lost">Churn</div></div><div class="funnel-specs"><div class="funnel-spec"><strong>SLA produto:</strong> Low Ticket 15d | Escola NE 90d | Formacao Triagil 120d | P-Mentri 180d</div></div></div>
       <div class="funnel-card"><div class="funnel-header"><span class="funnel-name">Nutricao</span><span class="funnel-tag">Nurturing</span></div><div class="flow"><div class="flow-stage entry">Classificacao</div><div class="flow-stage">Sequencia Ativa</div><div class="flow-stage">Engajou</div><div class="flow-stage won">Requalificado</div><div class="flow-stage lost">Frio</div></div></div>
       <div class="funnel-card"><div class="funnel-header"><span class="funnel-name">Suporte</span><span class="funnel-tag">Atendimento</span></div><div class="flow"><div class="flow-stage entry">Aberto</div><div class="flow-stage">Em Atendimento</div><div class="flow-stage">Aguardando Cliente</div><div class="flow-stage won">Resolvido</div><div class="flow-stage lost">Encerrado</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="ferramentas">
+  <div class="container">
+    <div class="sh"><h2>Ferramentas do Projeto</h2><p>Acesse diretamente o fluxo visual no Miro e toda a documentacao no Notion.</p></div>
+    <div class="tools-grid">
+      <a href="https://miro.com/app/board/uXjVG7NdkHo=/" target="_blank" class="tool-card">
+        <div class="tool-icon miro">M</div>
+        <div class="tool-name">Miro - Fluxo Comercial</div>
+        <div class="tool-desc">Visualizacao completa dos 6 pipelines, etapas, decisoes Won/Lost e conexoes entre funis. Board interativo.</div>
+        <div class="tool-link">Abrir no Miro &#8599;</div>
+      </a>
+      <a href="https://www.notion.so/31e8514a15b581e5b286de68a2a88d4b" target="_blank" class="tool-card">
+        <div class="tool-icon notion">N</div>
+        <div class="tool-name">Notion - Hub do Projeto</div>
+        <div class="tool-desc">Central de documentacao com todas as 7 fases TDI, specs, decisoes e acompanhamento completo do projeto.</div>
+        <div class="tool-link">Abrir no Notion &#8599;</div>
+      </a>
+      <div class="tool-card" style="border-style:dashed;cursor:default;">
+        <div class="tool-icon notion" style="background:var(--bg-alt);color:var(--text-dim);">N</div>
+        <div class="tool-name">Notion - Fases TDI</div>
+        <div class="tool-desc">Acesso direto a cada fase do projeto:</div>
+        <div class="notion-sub">
+          <a href="https://www.notion.so/41b8514a15b582908ebd01f43ab06e37" target="_blank" class="notion-phase"><span class="np-icon">&#128202;</span> Diagnostico</a>
+          <a href="https://www.notion.so/3928514a15b5836a939301978e1d2f90" target="_blank" class="notion-phase"><span class="np-icon">&#129504;</span> Blueprint</a>
+          <a href="https://www.notion.so/5d38514a15b5822e8913810f30973130" target="_blank" class="notion-phase"><span class="np-icon">&#9874;&#65039;</span> Implantacao</a>
+          <a href="https://www.notion.so/4538514a15b5831196cc8155cd6ac091" target="_blank" class="notion-phase"><span class="np-icon">&#9881;&#65039;</span> Automacoes</a>
+          <a href="https://www.notion.so/5738514a15b58307a21501803ac8b336" target="_blank" class="notion-phase"><span class="np-icon">&#128104;&#8205;&#127979;</span> Treinamento</a>
+          <a href="https://www.notion.so/ae68514a15b583b3af590154b6dfafef" target="_blank" class="notion-phase"><span class="np-icon">&#128269;</span> Auditoria</a>
+          <a href="https://www.notion.so/e218514a15b5827094ae016ba2700af5" target="_blank" class="notion-phase"><span class="np-icon">&#128200;</span> Metricas</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
